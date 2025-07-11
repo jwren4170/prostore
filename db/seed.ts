@@ -12,13 +12,13 @@ async function main() {
     data: [
       {
         name: "John Doe",
-        email: "john@example.com",
+        email: "admin@example.com",
         password: hashSync("password", 10),
         role: "admin",
       },
       {
         name: "Jane Doe",
-        email: "jane@example.com",
+        email: "user@example.com",
         password: hashSync("password2", 10),
       },
     ],

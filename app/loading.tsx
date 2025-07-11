@@ -3,14 +3,8 @@ import loader from "./loader.gif";
 
 const LoadingPage = () => {
   return (
-    <div className="fixed inset-0 flex justify-center items-center">
-      <Image
-        src={loader}
-        height={150}
-        width={150}
-        alt="Loading..."
-        priority={true}
-      />
+    <div className="fixed inset-0 flex justify-center items-center w-auto h-auto">
+      <Image src={loader} alt="Loading..." priority={true} />
     </div>
   );
 };

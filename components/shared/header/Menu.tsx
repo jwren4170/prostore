@@ -9,25 +9,23 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import UserButton from "./UserButton";
 
 const Menu = () => {
   return (
     <div className="flex justify-end gap-3">
-      <nav className="max-sm:hidden space-x-2">
+      <nav className="hidden md:flex gap-1 w-full max-w-xs">
         <ModeToggle />
-        <Button asChild variant={"ghost"}>
-          <Link href={"/cart"} className="flex items-center">
-            <ShoppingCart className="mr-2" /> Cart
+        <Button asChild variant="ghost">
+          <Link href="/cart">
+            <ShoppingCart /> Cart
           </Link>
         </Button>
-        <Button asChild>
-          <Link href={"/sign-in"} className="flex items-center">
-            <UserIcon className="mr-2" /> Sign In
-          </Link>
-        </Button>
+        <UserButton />
       </nav>
 
-      <nav className="sm:hidden">
+      {/* Mobile menu */}
+      <nav className="md:hidden">
         <Sheet>
           <SheetTrigger className="align-middle">
             <EllipsisVertical />
@@ -35,17 +33,13 @@ const Menu = () => {
           <SheetContent className="flex flex-col items-start">
             <SheetTitle>Menu</SheetTitle>
             <ModeToggle />
-            <Button asChild variant={"ghost"}>
-              <Link href={"/cart"}>
+            <Button asChild variant="ghost">
+              <Link href="/cart">
                 <ShoppingCart /> Cart
               </Link>
             </Button>
-            <Button asChild>
-              <Link href={"/sign-in"} className="flex items-center">
-                <UserIcon className="mr-2" /> Sign In
-              </Link>
-            </Button>
-            <SheetDescription />
+            <UserButton />
+            <SheetDescription></SheetDescription>
           </SheetContent>
         </Sheet>
       </nav>

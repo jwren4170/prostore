@@ -14,3 +14,10 @@ export const SIGN_IN_DEFAULTS = {
   email: "",
   password: "",
 };
+
+export const SIGN_UP_DEFAULTS = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};

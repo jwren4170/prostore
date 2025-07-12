@@ -19,3 +19,28 @@ export const formatPrice = (price: number): string => {
     maximumFractionDigits: 2,
   });
 };
+
+// format errors: Record<string, string>
+export const formatErrors = (error: any): Record<string, string> => {
+  if (error.name === "ZodError") {
+    // Handle Zod validation errors
+    const fieldErrors: Record<string, string> = {};
+    for (const issue of error.issues) {
+      // Use the first path segment as the key for simplicity
+      const path = issue.path[0] as string;
+      fieldErrors[path] = issue.message;
+    }
+    return fieldErrors;
+  } else if (
+    error.name === "PrismaClientKnownRequestError" &&
+    error.code === "P2002"
+  ) {
+    // Handle Prisma unique constraint errors (e.g., duplicate email)
+    // The specific field is often in `error.meta.target`
+    const field = error.meta?.target ? error.meta?.target[0] : "Field";
+    return { [field]: `This ${field} is already in use.` };
+  } else {
+    // Handle other types of errors
+    return { form: error.message || "An unexpected error occurred." };
+  }
+};

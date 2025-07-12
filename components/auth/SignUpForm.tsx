@@ -4,17 +4,17 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { SIGN_IN_DEFAULTS } from "@/lib/constants";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { signInWithCredentials } from "@/lib/actions/userActions";
+import { signUpNewUserWithCredentials } from "@/lib/actions/userActions";
 import { useSearchParams } from "next/navigation";
+import { SIGN_UP_DEFAULTS } from "@/lib/constants";
 
 import { FormState } from "@/types";
 
-const SignInForm = () => {
+const SignUpForm = () => {
   const [data, action] = useActionState<FormState, FormData>(
-    signInWithCredentials,
+    signUpNewUserWithCredentials,
     {
       success: false,
       message: "",
@@ -24,26 +24,40 @@ const SignInForm = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  const SignInButton = () => {
+  const SignUpButton = () => {
     const { pending } = useFormStatus();
     return (
       <Button className="w-full" disabled={pending} variant={"default"}>
-        {pending ? "Signing in..." : "Sign In"}
+        {pending ? "Submitting..." : "Sign up"}
       </Button>
     );
   };
+
   return (
     <form action={action}>
       <input type="hidden" value={callbackUrl} name="callbackUrl" />
       <div className="space-y-6">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="name">Name</Label>
         <Input
           type="text"
+          name="name"
+          autoComplete="on"
+          id="name"
+          placeholder="e.g. John Doe"
+          defaultValue={SIGN_UP_DEFAULTS.name}
+        />
+        {data?.errors?.name && (
+          <div className="text-destructive text-sm">{data.errors.name}</div>
+        )}
+
+        <Label htmlFor="email">Email</Label>
+        <Input
+          type="email"
           name="email"
           autoComplete="on"
           id="email"
-          placeholder="name@example.com"
-          defaultValue={SIGN_IN_DEFAULTS.email}
+          placeholder="email@example.com"
+          defaultValue={SIGN_UP_DEFAULTS.email}
         />
         {data?.errors?.email && (
           <div className="text-destructive text-sm">{data.errors.email}</div>
@@ -54,12 +68,27 @@ const SignInForm = () => {
           type="password"
           name="password"
           id="password"
-          autoComplete="current-password"
+          autoComplete="on"
           placeholder="**********"
-          defaultValue={SIGN_IN_DEFAULTS.password}
+          defaultValue={SIGN_UP_DEFAULTS.password}
         />
         {data?.errors?.password && (
           <div className="text-destructive text-sm">{data.errors.password}</div>
+        )}
+
+        <Label htmlFor="confirmPassword">Confirm Password</Label>
+        <Input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          autoComplete="on"
+          placeholder="**********"
+          defaultValue={SIGN_UP_DEFAULTS.confirmPassword}
+        />
+        {data?.errors?.confirmPassword && (
+          <div className="text-destructive text-sm">
+            {data.errors.confirmPassword}
+          </div>
         )}
 
         {data?.errors?.form && (
@@ -67,7 +96,7 @@ const SignInForm = () => {
         )}
 
         <div>
-          <SignInButton />
+          <SignUpButton />
         </div>
 
         {data && !data.success && data.message && (
@@ -75,13 +104,13 @@ const SignInForm = () => {
         )}
 
         <div className="mt-2 text-muted-foreground text-sm text-center">
-          Don&#39;t have an account?{" "}
+          Already have an account?{" "}
           <Link
-            href={"/sign-up"}
+            href={"/sign-in"}
             target="_self"
             className="font-semibold text-ring underline cursor-pointer"
           >
-            Sign Up
+            Sign In
           </Link>
         </div>
       </div>
@@ -89,4 +118,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

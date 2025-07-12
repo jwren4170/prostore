@@ -7,3 +7,9 @@ export type Product = z.infer<typeof insertProductSchema> & {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type FormState = {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
+};

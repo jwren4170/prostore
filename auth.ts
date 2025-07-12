@@ -4,6 +4,8 @@ import { prisma } from "@/db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts";
 import type { NextAuthConfig } from "next-auth";
+import { Session, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 export const config = {
   pages: {
@@ -73,14 +75,50 @@ export const config = {
     }),
   ],
   callbacks: {
-    async session({ session, user, trigger, token }: any) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       // Set user id from token
-      session.user.id = token.sub;
+      if (session.user) {
+        session.user.id = token.sub!;
+        session.user.role = token.role;
+        session.user.name = token.name;
+      }
 
-      //   if update set user name
-      if (trigger === "update") session.user.name = user.name;
+      console.log(token);
 
       return session;
+    },
+    async jwt({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: JWT;
+      user?: User;
+      trigger?: "signIn" | "signUp" | "update";
+      session?: any;
+    }) {
+      // Initial sign-in or sign-up
+      if (user) {
+        token.role = user.role;
+        if (user.name === "NO_NAME" && user.email) {
+          token.name = user.email.split("@")[0];
+          // Update user name in db
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        } else {
+          token.name = user.name; // Set name from user if it's not NO_NAME
+        }
+      }
+
+      // Handle session updates from the client
+      if (trigger === "update" && session?.name) {
+        token.name = session.name; // Update token name with the new name from the session update payload
+      }
+
+      return token;
     },
   },
 } satisfies NextAuthConfig;

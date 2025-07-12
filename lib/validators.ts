@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 import { formatPrice } from "./utils";
 
 const currency = z.string().refine((value) => {
@@ -44,7 +44,7 @@ export const signInSchema = z.object({
   email: z.email({ message: "Please enter a valid email" }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters long" })
+    .min(8, { message: "Password must be at least 8 characters long" })
     .max(32, { message: "Password cannot exceed 32 characters" }),
 });
 
@@ -58,7 +58,7 @@ export const signUpSchema = z
     email: z.email({ message: "Please enter a valid email" }),
     password: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters long" })
+      .min(8, { message: "Password must be at least 8 characters long" })
       .max(32, { message: "Password cannot exceed 32 characters" }),
     confirmPassword: z
       .string()
@@ -68,3 +68,27 @@ export const signUpSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+// cart schema
+export const cartItemSchema = z.object({
+  productId: z.string().nonempty({ message: "Product id is required" }),
+  name: z.string().nonempty({ message: "Item name required" }),
+  slug: z.string().nonempty({ message: "Item slug required" }),
+  qantity: z
+    .number()
+    .int()
+    .nonnegative({ message: "Quantity must be a positive integer" }),
+  image: z.string().nonempty({ message: "Image url required" }),
+  price: currency,
+});
+
+// insert items in the cart
+export const insertCartItemsSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  sessionCartId: z.string().nonempty({ message: "Session Cart Id Required" }),
+  userId: z.string().optional().nullable(),
+});

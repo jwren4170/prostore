@@ -41,6 +41,6 @@ export const formatErrors = (error: any): Record<string, string> => {
     return { [field]: `This ${field} is already in use.` };
   } else {
     // Handle other types of errors
-    return { form: error.message || "An unexpected error occurred." };
+    return { field: error.message || "An unexpected error occurred." };
   }
 };

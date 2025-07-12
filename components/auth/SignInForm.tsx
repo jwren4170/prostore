@@ -46,7 +46,7 @@ const SignInForm = () => {
           defaultValue={SIGN_IN_DEFAULTS.email}
         />
         {data?.errors?.email && (
-          <div className="text-destructive text-sm">{data.errors.email}</div>
+          <div className="text-green-400 text-sm">{data.errors.email}</div>
         )}
 
         <Label htmlFor="password">Password</Label>
@@ -59,11 +59,11 @@ const SignInForm = () => {
           defaultValue={SIGN_IN_DEFAULTS.password}
         />
         {data?.errors?.password && (
-          <div className="text-destructive text-sm">{data.errors.password}</div>
+          <div className="text-green-400 text-sm">{data.errors.password}</div>
         )}
 
         {data?.errors?.form && (
-          <div className="text-destructive text-center">{data.errors.form}</div>
+          <div className="text-green-400 text-center">{data.errors.form}</div>
         )}
 
         <div>
@@ -71,7 +71,7 @@ const SignInForm = () => {
         </div>
 
         {data && !data.success && data.message && (
-          <div className="text-destructive text-center">{data.message}</div>
+          <div className="text-green-400 text-center">{data.message}</div>
         )}
 
         <div className="mt-2 text-muted-foreground text-sm text-center">

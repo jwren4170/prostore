@@ -83,7 +83,7 @@ export const config = {
         session.user.name = token.name;
       }
 
-      console.log(token);
+      // console.log(token);
 
       return session;
     },

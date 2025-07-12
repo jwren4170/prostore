@@ -5,6 +5,7 @@ import ProductPrice from "@/components/shared/product/ProductPrice";
 import { getProductBySlug } from "@/lib/actions/productActions";
 import { notFound } from "next/navigation";
 import ProductImages from "@/components/shared/product/ProductImages";
+import Link from "next/link";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -21,6 +22,7 @@ const ProductDetailsPage = async (props: {
           <div className="col-span-2">
             <ProductImages images={product.images} />
           </div>
+
           {/* Details Column */}
           <div className="col-span-2 p-5">
             <div className="flex flex-col gap-6">
@@ -28,6 +30,7 @@ const ProductDetailsPage = async (props: {
                 {product.brand} {product.category}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
+
               {/* <Rating value={Number(product.rating)} /> */}
               <p>{product.numReviews} reviews</p>
               <div className="flex sm:flex-row flex-col sm:items-center gap-3">
@@ -42,6 +45,7 @@ const ProductDetailsPage = async (props: {
               <p>{product.description}</p>
             </div>
           </div>
+
           {/* Action Column */}
           <div>
             <Card>
@@ -60,9 +64,18 @@ const ProductDetailsPage = async (props: {
                     <Badge variant="destructive">Out Of Stock</Badge>
                   )}
                 </div>
+
                 {product.stock && product.stock > 0 ? (
-                  <div className="flex-center mt-4">
-                    <Button className="w-full">Add to Cart</Button>
+                  <div className="flex-col flex-center gap-2 mt-4">
+                    <Button className="w-full cursor-pointer">
+                      Add to Cart
+                    </Button>
+                    <Link
+                      href="/"
+                      className="font-medium text-primary-blue underline"
+                    >
+                      Continue Shopping
+                    </Link>
                   </div>
                 ) : (
                   ""

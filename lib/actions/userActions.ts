@@ -4,7 +4,7 @@ import { signInSchema, signUpSchema } from "../validators";
 import { signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hashSync } from "bcrypt-ts";
-import { prisma } from "@/db/prisma";
+import prisma from "@/db/prisma";
 import { formatErrors } from "../utils";
 import { FormState } from "@/types";
 
@@ -39,7 +39,8 @@ export const signInWithCredentials = async (
     return {
       success: false,
       message: "Invalid credentials. Please try again",
-      errors: formatErrors(error),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errors: formatErrors(error as any),
     };
   }
 };
@@ -83,7 +84,8 @@ export const signUpNewUserWithCredentials = async (
     return {
       success: false,
       message: "User not created. Please try again",
-      errors: formatErrors(error),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errors: formatErrors(error as any),
     };
   }
 };

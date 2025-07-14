@@ -2,9 +2,13 @@ import { z } from "zod";
 import { formatPrice } from "./utils";
 
 const currency = z.string().refine((value) => {
-  /^\d+(\.\d{2})?$/.test(formatPrice(Number(value)));
-  return true;
-}, "Invalid price");
+  // Check if the string is a valid non-negative number string (e.g., "123", "123.45")
+  // and can be converted to a number without resulting in NaN.
+  // Also, ensure it has at most two decimal places if it has any.
+  const isValidNumberString = /^\d+(\.\d{1,2})?$/.test(value);
+  const num = Number(value);
+  return isValidNumberString && !isNaN(num);
+}, "Invalid price format. Must be a non-negative number string with up to two decimal places.");
 
 // schema for inserting products
 export const insertProductSchema = z.object({
@@ -74,7 +78,7 @@ export const cartItemSchema = z.object({
   productId: z.string().nonempty({ message: "Product id is required" }),
   name: z.string().nonempty({ message: "Item name required" }),
   slug: z.string().nonempty({ message: "Item slug required" }),
-  qantity: z
+  quantity: z
     .number()
     .int()
     .nonnegative({ message: "Quantity must be a positive integer" }),

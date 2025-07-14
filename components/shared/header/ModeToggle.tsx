@@ -6,13 +6,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SunIcon, MoonIcon, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
+
 
 const ModeToggle = () => {
   const { theme, setTheme } = useTheme();

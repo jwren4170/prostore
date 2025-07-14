@@ -1,6 +1,6 @@
 import Image from "next/image";
 import loader from "./loader.gif";
-import { tr } from "zod/locales";
+
 
 const LoadingPage = () => {
   return (

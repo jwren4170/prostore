@@ -1,11 +1,14 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductPrice from "@/components/shared/product/ProductPrice";
 import { getProductBySlug } from "@/lib/actions/productActions";
 import { notFound } from "next/navigation";
 import ProductImages from "@/components/shared/product/ProductImages";
 import Link from "next/link";
+import AddToCart from "@/components/shared/product/AddToCart";
+import { formatPrice } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -66,20 +69,34 @@ const ProductDetailsPage = async (props: {
                 </div>
 
                 {product.stock && product.stock > 0 ? (
-                  <div className="flex-col flex-center gap-2 mt-4">
-                    <Button className="w-full cursor-pointer">
-                      Add to Cart
-                    </Button>
-                    <Link
-                      href="/"
-                      className="font-medium text-primary-blue underline"
-                    >
-                      Continue Shopping
-                    </Link>
+                  <div className="flex-center gap-2 mt-4">
+                    <AddToCart
+                      item={{
+                        productId: product.id,
+                        name: product.name,
+                        slug: product.slug,
+                        quantity: 1,
+                        image: product.images![0],
+                        price: formatPrice(Number(product.price)),
+                      }}
+                    />
                   </div>
                 ) : (
-                  ""
+                  <Button
+                    variant="default"
+                    type="button"
+                    className="hover:bg-chart-1 mt-4 w-full"
+                    disabled
+                  >
+                    <Plus /> <span className="line-through">Add to Cart</span>{" "}
+                  </Button>
                 )}
+                <Link
+                  href="/"
+                  className="block mt-4 font-medium text-primary-blue text-center underline"
+                >
+                  Continue Shopping
+                </Link>
               </CardContent>
             </Card>
           </div>

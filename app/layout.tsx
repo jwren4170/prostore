@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Roboto_Serif } from "next/font/google";
 import { APP_NAME, APP_DESCRIPTION, SERVER_URL } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const robotoSans = Roboto({
@@ -45,6 +46,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Toaster position="top-center" offset={"20rem"} duration={4000} />
       </body>
     </html>
   );

@@ -44,3 +44,14 @@ export const formatErrors = (error: any): Record<string, string> => {
     return { field: error.message || "An unexpected error occurred." };
   }
 };
+
+// round cart prices to 2 decimal places
+export const roundCartPriceToTwoDecimals = (value: number | string) => {
+  if (typeof value === "number") {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
+  } else if (typeof value === "string") {
+    return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  } else {
+    throw new Error("Error: Value needs to be number or string");
+  }
+};

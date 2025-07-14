@@ -1,11 +1,13 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/db/prisma";
+import prisma from "@/db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts";
 import type { NextAuthConfig } from "next-auth";
 import { Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
+// import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export const config = {
   pages: {
@@ -15,10 +17,6 @@ export const config = {
   session: {
     // Choose how you want to save the user session.
     // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
-    // If you use an `adapter` however, we default it to `"database"` instead.
-    // You can still force a JWT session by explicitly defining `"jwt"`.
-    // When using `"database"`, the session cookie will only contain a `sessionToken` value,
-    // which is used to look up the session in the database.
     strategy: "jwt",
 
     // Seconds - How long until an idle session expires and is no longer valid.
@@ -117,8 +115,32 @@ export const config = {
       if (trigger === "update" && session?.name) {
         token.name = session.name; // Update token name with the new name from the session update payload
       }
-
       return token;
+    },
+    authorized: async ({ request, auth }: any) => {
+      // check session cart for cookie
+      if (!request.cookies.get("sessionCartId")) {
+        // generate new session cart id cookie
+        const sessionCartId = crypto.randomUUID();
+
+        // clone request headers
+        const newRequestHeaders = new Headers(request.headers);
+
+        // create new response and add new headers
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        });
+
+        // set newly created sessionCartId in the response cookies
+        response.cookies.set("sessionCartId", sessionCartId);
+
+        return response;
+      } else {
+        return true;
+      }
+      // return auth;
     },
   },
 } satisfies NextAuthConfig;

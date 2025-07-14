@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { formatPrice } from "./utils";
 
 const currency = z.string().refine((value) => {
   // Check if the string is a valid non-negative number string (e.g., "123", "123.45")
@@ -89,10 +88,10 @@ export const cartItemSchema = z.object({
 // insert items in the cart
 export const insertCartItemsSchema = z.object({
   items: z.array(cartItemSchema),
-  itemsPrice: currency,
-  totalPrice: currency,
-  shippingPrice: currency,
-  taxPrice: currency,
+  itemsPrice: z.number(),
+  totalPrice: z.number(),
+  shippingPrice: z.number(),
+  taxPrice: z.number(),
   sessionCartId: z.string().nonempty({ message: "Session Cart Id Required" }),
   userId: z.string().optional().nullable(),
 });

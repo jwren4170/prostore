@@ -18,5 +18,14 @@ export type FormState = {
   errors?: Record<string, string>;
 };
 
-export type Cart = z.infer<typeof insertCartItemsSchema>;
+export type Cart = z.infer<typeof insertCartItemsSchema> & {
+  id: string;
+  userId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  itemsPrice: number;
+  totalPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
+};
 export type CartItem = z.infer<typeof cartItemSchema>;

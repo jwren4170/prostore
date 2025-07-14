@@ -9,6 +9,8 @@ import AddToCart from "@/components/shared/product/AddToCart";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { getMyCart } from "@/lib/actions/cartActions";
+import { Decimal } from "@prisma/client/runtime/library";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -16,6 +18,25 @@ const ProductDetailsPage = async (props: {
   const { slug } = await props.params;
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const cart = await getMyCart();
+
+  // Helper function to convert Decimal to number
+  const convertDecimalToNumber = (obj: any): any => {
+    if (obj instanceof Decimal) {
+      return obj.toNumber();
+    }
+    if (typeof obj === "object" && obj !== null) {
+      for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          obj[key] = convertDecimalToNumber(obj[key]);
+        }
+      }
+    }
+    return obj;
+  };
+
+  const convertedCart = cart ? convertDecimalToNumber(cart) : undefined;
 
   return (
     <>
@@ -71,6 +92,7 @@ const ProductDetailsPage = async (props: {
                 {product.stock && product.stock > 0 ? (
                   <div className="flex-center gap-2 mt-4">
                     <AddToCart
+                      cart={convertedCart}
                       item={{
                         productId: product.id,
                         name: product.name,

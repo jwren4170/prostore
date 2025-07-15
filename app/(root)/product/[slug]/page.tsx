@@ -12,6 +12,19 @@ import { Plus } from "lucide-react";
 import { getMyCart } from "@/lib/actions/cartActions";
 import { Decimal } from "@prisma/client/runtime/library";
 
+// Helper function to convert Decimal to number
+const convertDecimalToNumber = (obj: any): any => {
+  if (obj instanceof Decimal) {
+    return obj.toNumber();
+  }
+  if (typeof obj === "object" && obj !== null) {
+    for (const key of Object.keys(obj)) {
+      obj[key] = convertDecimalToNumber(obj[key]);
+    }
+  }
+  return obj;
+};
+
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
 }) => {
@@ -20,21 +33,6 @@ const ProductDetailsPage = async (props: {
   if (!product) notFound();
 
   const cart = await getMyCart();
-
-  // Helper function to convert Decimal to number
-  const convertDecimalToNumber = (obj: any): any => {
-    if (obj instanceof Decimal) {
-      return obj.toNumber();
-    }
-    if (typeof obj === "object" && obj !== null) {
-      for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-          obj[key] = convertDecimalToNumber(obj[key]);
-        }
-      }
-    }
-    return obj;
-  };
 
   const convertedCart = cart ? convertDecimalToNumber(cart) : undefined;
 
